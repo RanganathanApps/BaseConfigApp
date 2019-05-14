@@ -4,6 +4,7 @@ plugins {
     id("kotlin-android-extensions")
 }
 
+
 android {
     compileSdkVersion(AppConfig.targetSdkVersion)
     flavorDimensions("default")
@@ -21,6 +22,10 @@ android {
         }
     }
 
+    configurations {
+    }
+
+
 
 }
 
@@ -37,6 +42,7 @@ dependencies {
     implementation(Libs.coroutines)
     implementation(Libs.sdp)
     implementation(Libs.circleimageview)
+
 
     implementation(Libs.Test.espresso_core)
     implementation(Libs.Test.runner)
