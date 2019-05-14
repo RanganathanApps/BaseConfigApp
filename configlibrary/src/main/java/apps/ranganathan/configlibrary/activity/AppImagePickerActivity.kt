@@ -15,9 +15,7 @@ open class AppImagePickerActivity : PermissionsActivity() {
     lateinit var imagePickerListner: ImagePickerListener
 
 
-    fun setImagePicListenner(activity:AppCompatActivity){
-        imagePickerListner = activity as ImagePickerListener
-    }
+
 
     open interface ImagePickerListener{
         open fun onPicked(bitmap: Bitmap)
@@ -42,7 +40,7 @@ open class AppImagePickerActivity : PermissionsActivity() {
                     imagePickerListner.onPicked(bitmap)
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show()
+                   showToast(e.localizedMessage)
                 }
 
             }
@@ -53,29 +51,65 @@ open class AppImagePickerActivity : PermissionsActivity() {
         }
     }
 
-    open suspend fun selectImageInAlbum(imagePickerListener: ImagePickerListener) {
+    open fun selectImageInAlbum(activity: AppCompatActivity, imagePickerListener1: ImagePickerListener) {
 
-        setImagePicListenner(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
-                openAlbum()
-            }else{
-                makePermissionsRequest( object : PermissionListener {
+        try {
+            this@AppImagePickerActivity.imagePickerListner = imagePickerListener1
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
+                    openAlbum()
+                }else{
+                    getPermission( activity,object : PermissionListener {
 
-                    override fun onGranted() {
-                        openAlbum()
-                    }
+                        override fun onGranted() {
+                            openAlbum()
+                        }
 
-                    override fun onDenied(deniedPermissions: List<String>) {
-                        showToast(this@AppImagePickerActivity,"deniedPermissions")
-                    }
+                        override fun onDenied(deniedPermissions: List<String>) {
+                            showToast("deniedPermissions")
+                        }
 
-                    override fun onDeniedForeEver(deniedPermissions: List<String>) {
-
-                    }
-                }, Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        override fun onDeniedForeEver(deniedPermissions: List<String>) {
+                            showToast("onDeniedForeEver")
+                        }
+                    }, Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                }
             }
+        } catch (e: Exception) {
+            showToast(e.localizedMessage)
+        }
+
+
+    }
+
+    open fun takePhotoInCamera(activity: AppCompatActivity, imagePickerListener1: ImagePickerListener) {
+
+        try {
+            this@AppImagePickerActivity.imagePickerListner = imagePickerListener1
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED) {
+                    takePhoto(imagePickerListener1)
+                }else{
+                    getPermission( activity,object : PermissionListener {
+
+                        override fun onGranted() {
+                            makeLog("Permissions granted!")
+                            takePhoto(imagePickerListener1)
+                        }
+
+                        override fun onDenied(deniedPermissions: List<String>) {
+                            showToast("deniedPermissions")
+                        }
+
+                        override fun onDeniedForeEver(deniedPermissions: List<String>) {
+                            showToast("onDeniedForeEver")
+                        }
+                    }, Manifest.permission.CAMERA)
+                }
+            }
+        } catch (e: Exception) {
+            showToast(e.localizedMessage)
         }
 
 
@@ -91,8 +125,8 @@ open class AppImagePickerActivity : PermissionsActivity() {
         }
     }
 
-    open fun takePhoto(imagePickerListener: ImagePickerListener) {
-        setImagePicListenner(this)
+    open fun takePhoto(imagePickerListener1: ImagePickerListener) {
+        this@AppImagePickerActivity.imagePickerListner = imagePickerListener1
         val intent1 = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (intent1.resolveActivity(packageManager) != null) {
             startActivityForResult(intent1,

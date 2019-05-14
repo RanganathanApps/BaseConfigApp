@@ -10,26 +10,20 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import apps.ranganathan.configlibrary.base.BaseAppActivity
+import apps.ranganathan.configlibrary.utils.LogManager
+import apps.ranganathan.configlibrary.utils.ToastManager
 import com.google.android.material.snackbar.Snackbar
 
-open class UtilActivity : AppCompatActivity() {
+open class UtilActivity : AppCompatActivity(), ToastManager, LogManager {
 
-    open fun makeLog(key: String, value: String) {
-        Log.w(key, value)
-    }
+    override val context: Context
+        get() = this
 
-    open fun makeLog(msg: String) {
-        Log.w("base", msg)
-    }
 
     open fun showMsg(view: View, msg: String) {
         BaseAppActivity.makeLog(msg)
         Snackbar.make(view, msg, Snackbar.LENGTH_LONG)
             .setAction("Action", null).show()
-    }
-
-    open fun showToast(context: Context, msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
 
     @RequiresApi(Build.VERSION_CODES.CUPCAKE)

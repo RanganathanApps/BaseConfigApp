@@ -35,6 +35,9 @@ dependencies {
     implementation(Libs.runtimePermissions)
     implementation(Libs.material)
     implementation(Libs.coroutines)
+    implementation(Libs.sdp)
+    implementation(Libs.circleimageview)
+
     implementation(Libs.Test.espresso_core)
     implementation(Libs.Test.runner)
 

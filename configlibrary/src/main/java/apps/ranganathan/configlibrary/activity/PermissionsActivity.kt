@@ -1,9 +1,10 @@
 package apps.ranganathan.configlibrary.activity
 
+import android.Manifest
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.github.florent37.runtimepermission.kotlin.PermissionException
 import com.github.florent37.runtimepermission.kotlin.askPermission
-import com.github.florent37.runtimepermission.kotlin.coroutines.experimental.askPermission
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,7 +18,7 @@ open class PermissionsActivity : ConnectivityChangeActivity() {
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Default
 
-    val scope = CoroutineScope(coroutineContext)
+    public val baseScope = CoroutineScope(coroutineContext)
 
     lateinit var permissionListener: PermissionListener
     open interface PermissionListener {
@@ -26,16 +27,49 @@ open class PermissionsActivity : ConnectivityChangeActivity() {
         open fun onDeniedForeEver(deniedPermissions: List<String>)
     }
 
-    open  fun makePermissionsRequest(permissionListener: PermissionListener, vararg permissions: String) {
-        try {
-            scope.launch {
-            val result = askPermission(*permissions)
-                //all permissions already granted or just granted
-                //your action
-                makeLog("Accepted :${result.accepted.toString()}")
+    open fun getPermission(activity: AppCompatActivity,permissionListener: PermissionListener, vararg permissions: String) {
+        askPermission(*permissions) {
+            if (it.isAccepted) {
                 permissionListener.onGranted()
             }
+        }.onDeclined { e ->
+            //at least one permission have been declined by the user
+            if (e.hasDenied()) {
+                e.denied.forEach { permission ->
+                    makeLog(permission)
+                }
+                permissionListener.onDenied(e.denied)
+                /*ask again with dialog*/
+                AlertDialog.Builder(this@PermissionsActivity)
+                    .setMessage("Please accept our permissions")
+                    .setPositiveButton("yes") { dialog, which ->
+                        e.askAgain();
+                    } //ask again
+                    .setNegativeButton("no") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
 
+            if (e.hasForeverDenied()) {
+                e.foreverDenied.forEach { permission ->
+                    makeLog(permission)
+                }
+                permissionListener.onDeniedForeEver(e.foreverDenied)
+                //you need to open setting manually if you really need it
+                e.goToSettings()
+            }
+        }
+    }
+
+    /*open fun makePermissionsRequest(permissionListener: PermissionListener, vararg permissions: String) {
+        try {
+
+            val result = askPermission(*permissions){
+
+            }
+            makeLog("Accepted :${result.accepted.toString()}")
+            permissionListener.onGranted()
 
         } catch (e: PermissionException) {
             if (e.hasDenied()) {
@@ -73,5 +107,5 @@ open class PermissionsActivity : ConnectivityChangeActivity() {
             }
         }
 
-    }
+    }*/
 }

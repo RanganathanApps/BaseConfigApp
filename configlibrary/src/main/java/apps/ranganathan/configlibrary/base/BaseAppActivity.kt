@@ -16,7 +16,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import apps.ranganathan.configlibrary.R
 import apps.ranganathan.configlibrary.activity.AppImagePickerActivity
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -44,19 +43,21 @@ open class BaseAppActivity : AppImagePickerActivity() {
         }
     }
 
-    open fun loadImage(uri: Uri, imageView: ImageView, placeHolder: Int, placeHolderError: Int,progressBar:View) {
+    open fun loadImage(url: String, imageView: ImageView, placeHolder: Int, placeHolderError: Int, progressBar: View) {
         progressBar.visibility = View.VISIBLE
-        Picasso.get().load(uri)
+        Picasso.get().load(url)
             .placeholder(placeHolder)
             .error(placeHolderError)
             .into(imageView, object : Callback {
-            override fun onSuccess() {
-                progressBar.visibility = View.GONE
-            }
-            override fun onError(e: Exception?) {
-                progressBar.visibility = View.GONE
-            }
-        })
+                override fun onSuccess() {
+                    progressBar.visibility = View.GONE
+                }
+
+                override fun onError(e: Exception?) {
+                    progressBar.visibility = View.GONE
+                    makeLog(e!!.localizedMessage)
+                }
+            })
     }
 
     private lateinit var bundle: Bundle
@@ -76,7 +77,7 @@ open class BaseAppActivity : AppImagePickerActivity() {
             intent.putExtras(bundle)
             mCon.startActivity(intent)
         } catch (e: Exception) {
-            showToast(mCon, e.message.toString())
+            showToast(e.message.toString())
         }
 
     }
@@ -121,7 +122,7 @@ open class BaseAppActivity : AppImagePickerActivity() {
     }
 
 
-    open fun attentionDialog(mCon: Context, appOkInter: AppOkInter, msg: String,iconId :Int,Alerttitle: String) {
+    open fun attentionDialog(mCon: Context, appOkInter: AppOkInter, msg: String, iconId: Int, Alerttitle: String) {
         val activity = mCon as AppCompatActivity
         activity.runOnUiThread {
             val alertDialogBuilder = AlertDialog.Builder(mCon)
