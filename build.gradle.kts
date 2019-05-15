@@ -18,14 +18,16 @@ buildscript {
         // in the individual module build.gradle.kts files
     }
 
-    allprojects {
-        repositories {
-            mavenLocal()
-            google()
-            jcenter()
-            maven(url = "https://jitpack.io")
-            maven(url = "https://maven.google.com")
-        }
-    }
 
+
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        google()
+        jcenter()
+        maven(url = "https://jitpack.io")
+        maven(url = "https://maven.google.com")
+    }
 }

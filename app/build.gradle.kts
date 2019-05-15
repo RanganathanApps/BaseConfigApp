@@ -23,6 +23,11 @@ android {
         }
     }
 
+    repositories {
+        jcenter()
+        maven(url = "https://jitpack.io")
+    }
+
 
 }
 
@@ -39,6 +44,9 @@ dependencies {
 
     implementation(project(":configlibrary"))
 
+}
+repositories {
+    mavenCentral()
 }
 
 
