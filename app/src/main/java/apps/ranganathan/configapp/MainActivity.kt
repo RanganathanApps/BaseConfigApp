@@ -73,8 +73,8 @@ class MainActivity : BaseAppActivity() {
     }
 
 
-    @SuppressLint("MissingSuperCall")
     override fun onStart() {
+        super.onStart()
         setInternetConnectionListener(this, object : InternetConnectionListener {
 
             override fun onInternetConnected() {
