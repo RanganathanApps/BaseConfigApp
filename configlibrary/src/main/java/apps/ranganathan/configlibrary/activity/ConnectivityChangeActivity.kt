@@ -43,6 +43,8 @@ open class ConnectivityChangeActivity : UtilActivity() {
 
             }
         })
+
+
     }
 
 
