@@ -1,10 +1,8 @@
 package apps.ranganathan.configapp
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Bundle
-import apps.ranganathan.configlibrary.activity.ConnectivityChangeActivity
 import apps.ranganathan.configlibrary.base.BaseAppActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -14,7 +12,7 @@ class MainActivity : BaseAppActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        setConnectivityChange()
 
         btnOpenAlbum.setOnClickListener {
 
@@ -37,15 +35,17 @@ class MainActivity : BaseAppActivity() {
         }
 
         imgPhoto.setOnClickListener {
-            loadImage("https://cdn-images-1.medium.com/max/1600/1*PG7q_78CFDUWF4Q8z247Lw.png",
+            loadImage(
+                "https://cdn-images-1.medium.com/max/1600/1*PG7q_78CFDUWF4Q8z247Lw.png",
                 imgPhoto,
-                R.drawable.abc_seekbar_thumb_material,R.drawable.abc_ic_star_black_16dp,progress)
+                R.drawable.abc_seekbar_thumb_material, R.drawable.abc_ic_star_black_16dp, progress
+            )
 
-            attentionDialog(context,object :AppOkInter{
+            attentionDialog(context, object : AppOkInter {
                 override fun onOk() {
                     makeLog("Alert dialog dismissed!")
                 }
-            },"You have Displayed a dialog",R.mipmap.ic_launcher,"Sample Alert")
+            }, "You have Displayed a dialog", R.mipmap.ic_launcher, "Sample Alert")
         }
         btnAskPermission.setOnClickListener {
 
@@ -75,15 +75,7 @@ class MainActivity : BaseAppActivity() {
 
     override fun onStart() {
         super.onStart()
-        setInternetConnectionListener(this, object : InternetConnectionListener {
 
-            override fun onInternetConnected() {
-                showToast("Connected to world!")
-            }
-            override fun onInternetDisConnected() {
-                showToast("Hello DisConnected!")
 
-            }
-        })
     }
 }

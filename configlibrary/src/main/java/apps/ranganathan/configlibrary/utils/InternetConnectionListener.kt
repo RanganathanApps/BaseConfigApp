@@ -4,6 +4,6 @@ interface InternetConnectionListener {
 
     abstract fun onInternetConnected()
 
-    abstract fun onInternetDisConnected()
+     fun onInternetDisConnected()
 
 }

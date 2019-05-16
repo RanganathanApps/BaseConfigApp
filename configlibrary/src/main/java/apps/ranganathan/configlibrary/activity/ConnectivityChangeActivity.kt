@@ -5,38 +5,50 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import apps.ranganathan.configlibrary.base.NetworkUtil
+import apps.ranganathan.configlibrary.utils.InternetBroadCast
+import apps.ranganathan.configlibrary.utils.InternetConnectionListener
 
 open class ConnectivityChangeActivity : UtilActivity() {
 
-    internal var internetConnectionListener: InternetConnectionListener? = null
+    open var isDisconnected = false;
+    val CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
 
-    private val networkChangeReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            Log.d("app", "Network connectivity change")
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
 
-            if (NetworkUtil.isNetworkAvailable(context)) {
-                if (internetConnectionListener != null)
-                    internetConnectionListener!!.onInternetConnected()
-            } else {
-                if (internetConnectionListener != null)
-                    internetConnectionListener!!.onInternetDisConnected()
+    }
+
+    open fun setConnectivityChange(){
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(InternetBroadCast(), intentFilter)
+
+        InternetBroadCast.setInternetConnectionListener(this, object : InternetConnectionListener {
+
+            override fun onInternetConnected() {
+                if (isDisconnected) {
+                    isDisconnected = false
+                    showToast("Connected..")
+                }
             }
 
-        }
+            override fun onInternetDisConnected() {
+                isDisconnected = true
+                showToast("Internet  disConnected!")
+
+            }
+        })
     }
 
-    interface InternetConnectionListener {
-        fun onInternetConnected()
 
-        fun onInternetDisConnected()
-    }
 
-    fun setInternetConnectionListener(  activity: AppCompatActivity,internetConnectionListener: InternetConnectionListener) {
-        this.internetConnectionListener = internetConnectionListener
-    }
+
+
 
 
     override fun onResume() {
@@ -47,12 +59,12 @@ open class ConnectivityChangeActivity : UtilActivity() {
 
     override fun onStart() {
         super.onStart()
-        val intentFilter = IntentFilter()
+       /* val intentFilter = IntentFilter()
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(networkChangeReceiver, intentFilter)
+        registerReceiver(networkChangeReceiver, intentFilter)*/
     }
     override fun onPause() {
         super.onPause()
-        unregisterReceiver(networkChangeReceiver)
+        //unregisterReceiver(networkChangeReceiver)
     }
 }
