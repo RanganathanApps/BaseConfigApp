@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import apps.ranganathan.configlibrary.activity.AppImagePickerActivity
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.io.Serializable
@@ -59,6 +60,27 @@ open class BaseAppActivity : AppImagePickerActivity() {
                 }
             })
     }
+
+    open fun loadImage(url: String, imageView: ImageView, placeHolder: Int) {
+        Picasso.get().load(url)
+            .placeholder(placeHolder)
+            .into(imageView, object : Callback {
+                override fun onSuccess() {
+                }
+
+                override fun onError(e: Exception?) {
+                    makeLog(e!!.localizedMessage)
+                }
+            })
+    }
+
+    open fun loadImage(context:Context, url: String, imageView: ImageView, placeHolder: Int) {
+        Glide.with(context)
+            .load(url)
+            .placeholder(placeHolder)
+            .into(imageView)
+    }
+
 
     private lateinit var bundle: Bundle
 
