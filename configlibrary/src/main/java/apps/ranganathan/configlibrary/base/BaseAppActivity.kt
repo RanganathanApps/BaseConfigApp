@@ -21,9 +21,16 @@ import com.bumptech.glide.Glide
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.io.Serializable
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+
+
 
 
 open class BaseAppActivity : AppImagePickerActivity() {
+
+    val bundle = Bundle()
+    val requestOptions = RequestOptions()
 
     companion object {
 
@@ -38,10 +45,10 @@ open class BaseAppActivity : AppImagePickerActivity() {
             //ContextCompat.startActivity(context, intent, null)
             return intent
         }
-
         open fun makeLog(msg: String) {
             Log.w("base", msg)
         }
+
     }
 
     open fun loadImage(url: String, imageView: ImageView, placeHolder: Int, placeHolderError: Int, progressBar: View) {
@@ -49,6 +56,7 @@ open class BaseAppActivity : AppImagePickerActivity() {
         Picasso.get().load(url)
             .placeholder(placeHolder)
             .error(placeHolderError)
+            .fit()
             .into(imageView, object : Callback {
                 override fun onSuccess() {
                     progressBar.visibility = View.GONE
@@ -61,28 +69,14 @@ open class BaseAppActivity : AppImagePickerActivity() {
             })
     }
 
-    open fun loadImage(url: String, imageView: ImageView, placeHolder: Int) {
-        Picasso.get().load(url)
-            .placeholder(placeHolder)
-            .into(imageView, object : Callback {
-                override fun onSuccess() {
-                }
+    open fun loadImage(url: String, imageView: ImageView, placeHolder: Int){
 
-                override fun onError(e: Exception?) {
-                    makeLog(e!!.localizedMessage)
-                }
-            })
-    }
-
-    open fun loadImage(context:Context, url: String, imageView: ImageView, placeHolder: Int) {
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL)
         Glide.with(context)
-            .load(url)
-            .placeholder(placeHolder)
+            .load(url).apply(requestOptions)
             .into(imageView)
     }
 
-
-    private lateinit var bundle: Bundle
 
     open fun startActivityputExtra(mCon: Context, cls: Class<*>, key: String, o: Any) {
         try {
@@ -103,6 +97,24 @@ open class BaseAppActivity : AppImagePickerActivity() {
         }
 
     }
+
+    open fun startAppActivity(mCon: Context, cls: Class<*>) {
+        try {
+            val intent = Intent(mCon, cls)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT or
+                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or
+                    Intent.FLAG_ACTIVITY_NEW_TASK
+
+
+            mCon.startActivity(intent)
+        } catch (e: Exception) {
+            showToast(e.message.toString())
+        }
+
+    }
+
 
     open fun showSmallNotification(
         mCon: Context, mBuilder: NotificationCompat.Builder,
