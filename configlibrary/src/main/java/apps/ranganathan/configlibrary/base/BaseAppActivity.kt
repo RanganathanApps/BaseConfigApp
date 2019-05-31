@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import apps.ranganathan.configlibrary.R
 import apps.ranganathan.configlibrary.activity.AppImagePickerActivity
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Callback
@@ -23,14 +24,35 @@ import com.squareup.picasso.Picasso
 import java.io.Serializable
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-
-
+import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 
 
 open class BaseAppActivity : AppImagePickerActivity() {
 
     val bundle = Bundle()
     val requestOptions = RequestOptions()
+
+    open fun setAppBar(title: String) {
+        try {
+            toolbar.title = title
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.navigationIcon = getDrawable(R.drawable.ic_arrow_back_black_24dp)
+            }
+            setSupportActionBar(toolbar)
+            toolbar.setNavigationOnClickListener { onBackPressed() }
+        } catch (e: Exception) {
+            showToast(e.localizedMessage)
+        }
+    }
+
+    open fun setToolBarTitle(title: String) {
+        try {
+            toolbar.txtToolbarTitle.text = title
+        } catch (e: Exception) {
+            showToast(e.localizedMessage)
+        }
+    }
 
     companion object {
 
@@ -96,6 +118,28 @@ open class BaseAppActivity : AppImagePickerActivity() {
             showToast(e.message.toString())
         }
 
+    }
+
+    open fun startActivityputExtra(mCon: Context, cls: Class<*>,map: Map<String, Any>) {
+        try {
+            val intent = Intent(mCon, cls)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT or
+                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or
+                    Intent.FLAG_ACTIVITY_NEW_TASK
+
+
+            bundle.clear()
+            for (pair in map) {
+                bundle.putSerializable(pair.key, pair.value as Serializable)
+
+            }
+            intent.putExtras(bundle)
+            mCon.startActivity(intent)
+        } catch (e: Exception) {
+            showToast(e.message.toString())
+        }
     }
 
     open fun startAppActivity(mCon: Context, cls: Class<*>) {
