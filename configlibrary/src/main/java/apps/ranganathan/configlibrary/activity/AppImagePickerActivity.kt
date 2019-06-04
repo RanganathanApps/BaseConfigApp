@@ -31,24 +31,27 @@ open class AppImagePickerActivity : PermissionsActivity() {
         super.onActivityResult(requestCode, resultCode, data)
          if (resultCode == Activity.RESULT_CANCELED){
              imagePickerListner.onCancelled()
+             return
+         }else{
+             if (requestCode == REQUEST_SELECT_IMAGE_IN_ALBUM) {
+                 if (data != null) {
+                     val contentURI = data!!.data
+                     try {
+                         val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
+                         imagePickerListner.onPicked(bitmap)
+                     } catch (e: IOException) {
+                         e.printStackTrace()
+                         showToast(e.localizedMessage)
+                     }
+
+                 }
+
+             } else if (requestCode == REQUEST_TAKE_PHOTO) {
+                 val thumbnail = data!!.extras!!.get("data") as Bitmap
+                 imagePickerListner.onPicked(thumbnail)
+             }
          }
-        if (requestCode == REQUEST_SELECT_IMAGE_IN_ALBUM) {
-            if (data != null) {
-                val contentURI = data!!.data
-                try {
-                    val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
-                    imagePickerListner.onPicked(bitmap)
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                   showToast(e.localizedMessage)
-                }
 
-            }
-
-        } else if (requestCode == REQUEST_TAKE_PHOTO) {
-            val thumbnail = data!!.extras!!.get("data") as Bitmap
-            imagePickerListner.onPicked(thumbnail)
-        }
     }
 
     open fun selectImageInAlbum(activity: AppCompatActivity, imagePickerListener1: ImagePickerListener) {
