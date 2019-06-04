@@ -1,6 +1,7 @@
 package apps.ranganathan.configlibrary.activity
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -19,6 +20,7 @@ open class AppImagePickerActivity : PermissionsActivity() {
 
     open interface ImagePickerListener{
         open fun onPicked(bitmap: Bitmap)
+        open fun onCancelled()
     }
     companion object {
         private val REQUEST_TAKE_PHOTO = 0
@@ -28,10 +30,9 @@ open class AppImagePickerActivity : PermissionsActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        /* if (resultCode == this.RESULT_CANCELED)
-         {
-         return
-         }*/
+         if (resultCode == Activity.RESULT_CANCELED){
+             imagePickerListner.onCancelled()
+         }
         if (requestCode == REQUEST_SELECT_IMAGE_IN_ALBUM) {
             if (data != null) {
                 val contentURI = data!!.data

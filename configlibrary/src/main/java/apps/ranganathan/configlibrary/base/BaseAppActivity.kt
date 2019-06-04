@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -52,6 +54,11 @@ open class BaseAppActivity : AppImagePickerActivity() {
         } catch (e: Exception) {
             showToast(e.localizedMessage)
         }
+    }
+
+    open fun changeToolbarNavIconColor(color : Int ){
+        toolbar.navigationIcon!!.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_IN)
+        txtToolbarTitle.setTextColor(ContextCompat.getColor(this,R.color.colorWhite))
     }
 
     companion object {

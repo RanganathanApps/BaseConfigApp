@@ -18,6 +18,10 @@ class MainActivity : BaseAppActivity() {
 
             /*camera*/
             takePhotoInCamera(this, object : ImagePickerListener {
+                override fun onCancelled() {
+
+                }
+
                 override fun onPicked(bitmap: Bitmap) {
 
                     showToast("bitmap")
@@ -25,6 +29,11 @@ class MainActivity : BaseAppActivity() {
             })
             /*gallery*/
             selectImageInAlbum(this, object : ImagePickerListener {
+
+                override fun onCancelled() {
+
+                }
+
                 override fun onPicked(bitmap: Bitmap) {
                     imgPhoto.setImageBitmap(bitmap)
                     showToast("bitmap")
