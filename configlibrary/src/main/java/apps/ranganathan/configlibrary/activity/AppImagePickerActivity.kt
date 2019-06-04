@@ -17,7 +17,6 @@ open class AppImagePickerActivity : PermissionsActivity() {
 
 
 
-
     open interface ImagePickerListener{
         open fun onPicked(bitmap: Bitmap)
         open fun onCancelled()
