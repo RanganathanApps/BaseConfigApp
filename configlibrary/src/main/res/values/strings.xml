@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name_base">ConfigLibrary</string>
+    <string name="processing">Processing</string>
 </resources>

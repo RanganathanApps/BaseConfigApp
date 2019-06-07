@@ -2,6 +2,7 @@ package apps.ranganathan.configlibrary.activity
 
 import android.content.Context
 import android.os.Build
+import android.os.VibrationEffect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Vibrator
 import android.util.Log
@@ -12,9 +13,10 @@ import androidx.annotation.RequiresApi
 import apps.ranganathan.configlibrary.base.BaseAppActivity
 import apps.ranganathan.configlibrary.utils.LogManager
 import apps.ranganathan.configlibrary.utils.ToastManager
+import apps.ranganathan.configlibrary.utils.VibrateManager
 import com.google.android.material.snackbar.Snackbar
 
-open class UtilActivity : AppCompatActivity(), ToastManager, LogManager {
+open class UtilActivity : AppCompatActivity(), ToastManager, LogManager, VibrateManager {
 
     override val context: Context
         get() = this
@@ -33,12 +35,6 @@ open class UtilActivity : AppCompatActivity(), ToastManager, LogManager {
             val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
         }
-    }
-
-    open fun vibrate(mCon: Context) {
-        val v = mCon.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        // Vibrate for 500 milliseconds
-        v.vibrate(40)
     }
 
     open fun capitalize(s: String): String {

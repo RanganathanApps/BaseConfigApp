@@ -1,5 +1,6 @@
 package apps.ranganathan.configlibrary.base
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.DialogInterface
@@ -20,12 +21,16 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import apps.ranganathan.configlibrary.R
 import apps.ranganathan.configlibrary.activity.AppImagePickerActivity
+import apps.ranganathan.configlibrary.utils.Utils
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.io.Serializable
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.alert_ly.view.*
+import kotlinx.android.synthetic.main.error_ly.view.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -221,6 +226,77 @@ open class BaseAppActivity : AppImagePickerActivity() {
             alertDialog.show()
             alertDialog.setCancelable(false)
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    open fun showException(message: String) {
+        try {
+            val view = layoutInflater.inflate(R.layout.fragment_bottom_sheet_ex, null)
+            view.errorLy.txtErrorMessage.text = message
+            view.alertLy.visibility = View.GONE
+            val dialog = BottomSheetDialog(this)
+            dialog.setContentView(view)
+            if (!isFinishing) {
+                dialog.show()
+            }
+        } catch (e: Exception) {
+            Log.w("App Error:", e.localizedMessage)
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    open fun showAlert(title: String, message: String, alertOkListner: Any?, cancelListner: Any?) {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.fragment_bottom_sheet_ex, null)
+        view.errorLy.visibility = View.GONE
+        view.alertLy.txtAlertMessage.text = message
+        view.alertLy.txtAlertTitle.text = title
+        view.alertLy.btnYes.visibility = View.GONE
+        view.alertLy.btnYes.text = "Ok"
+
+        view.alertLy.btnYes.setOnClickListener {
+            alertOkListner as Utils.OnClickListener
+            alertOkListner.onClick(it)
+            dialog.dismiss()
+        }
+        view.alertLy.btnNo.setOnClickListener {
+            cancelListner as Utils.OnClickListener
+            cancelListner.onClick(it)
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+    @SuppressLint("SetTextI18n")
+    open fun showConfirmationAlert(title: String, message: String, alertOkListner: Any?, cancelListner: Any?) {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.fragment_bottom_sheet_ex, null)
+        view.errorLy.visibility = View.GONE
+        view.alertLy.txtAlertMessage.text = message
+        view.alertLy.txtAlertTitle.text = title
+
+        view.alertLy.btnYes.setOnClickListener {
+            alertOkListner as Utils.OnClickListener
+            alertOkListner.onClick(it)
+            dialog.dismiss()
+        }
+        view.alertLy.btnNo.setOnClickListener {
+            cancelListner as Utils.OnClickListener
+            cancelListner.onClick(it)
+            dialog.dismiss()
+        }
+
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+    open fun redirectStore(updateUrl: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
 
