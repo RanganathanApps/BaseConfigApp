@@ -19,22 +19,34 @@ open class ForceUpdateChecker(
     }
 
     open fun check() {
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
+        val remoteConfig =FirebaseRemoteConfig.getInstance()
+        remoteConfig.fetch(0)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.w(TAG, "Firebase Remote config Fetch Succeeded")
+                    remoteConfig.activate().addOnCompleteListener {
+                        if (it.isSuccessful){
+                            if (remoteConfig.getBoolean(KEY_UPDATE_REQUIRED)) {
+                                val currentVersion = remoteConfig.getString(KEY_CURRENT_VERSION)
+                                val appVersion = getAppVersion(context)
+                                val updateUrl = remoteConfig.getString(KEY_UPDATE_URL)
 
-        if (remoteConfig.getBoolean(KEY_UPDATE_REQUIRED)) {
-            val currentVersion = remoteConfig.getString(KEY_CURRENT_VERSION)
-            val appVersion = getAppVersion(context)
-            val updateUrl = remoteConfig.getString(KEY_UPDATE_URL)
+                                Log.w("remote : ", "currentVersion $currentVersion appVersion $appVersion updateUrl $updateUrl")
 
-            Log.w("remote : ", "currentVersion $currentVersion appVersion $appVersion updateUrl $updateUrl")
-
-            if (!TextUtils.equals(currentVersion, appVersion) && onUpdateNeededListener != null) {
-                onUpdateNeededListener.onUpdateNeeded(updateUrl)
-            } else {
-                onUpdateNeededListener!!.onUpToDate()
+                                if (!TextUtils.equals(currentVersion, appVersion) && onUpdateNeededListener != null) {
+                                    onUpdateNeededListener.onUpdateNeeded(updateUrl)
+                                } else {
+                                    onUpdateNeededListener!!.onUpToDate()
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Log.w(TAG, "Firebase Remote config Fetch failed")
+                }
             }
-        }
     }
+
 
     open fun getAppVersion(context: Context): String {
         var result = ""
