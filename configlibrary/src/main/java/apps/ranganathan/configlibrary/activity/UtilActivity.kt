@@ -14,6 +14,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import apps.ranganathan.configlibrary.R
 import apps.ranganathan.configlibrary.base.BaseAppActivity
 import apps.ranganathan.configlibrary.utils.ForceUpdateChecker
 import apps.ranganathan.configlibrary.utils.LogManager
@@ -32,6 +34,9 @@ open class UtilActivity : AppCompatActivity(), ToastManager, LogManager, Vibrate
                 redirectStore(updateUrl)
             }).setNegativeButton("cancel", null).create()
 
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context,R.color.colorGrey));
+        }
         dialog.show()
     }
 
