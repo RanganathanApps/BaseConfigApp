@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProviders
 import apps.ranganathan.configlibrary.base.NetworkUtil
 import apps.ranganathan.configlibrary.utils.InternetBroadCast
@@ -20,9 +21,8 @@ open class ConnectivityChangeActivity : UtilActivity() {
     lateinit var connectivityViewModel: ConnectivityViewModel
     val CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-
+    open fun getIsConnected():LiveData<Boolean>{
+        return  connectivityViewModel.isConnected
     }
 
     open fun setConnectivityChange(){
