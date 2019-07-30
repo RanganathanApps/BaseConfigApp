@@ -29,6 +29,7 @@ import java.io.Serializable
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.squareup.picasso.NetworkPolicy
 import kotlinx.android.synthetic.main.alert_ly.view.*
 import kotlinx.android.synthetic.main.error_ly.view.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -101,6 +102,13 @@ open class BaseAppActivity : AppImagePickerActivity() {
                     makeLog(e!!.localizedMessage)
                 }
             })
+    }
+    open fun loadImagePicasso(url: String, imageView: ImageView, placeHolder: Int) {
+        Picasso.get().load(url)
+            .placeholder(placeHolder)
+            .networkPolicy(NetworkPolicy.OFFLINE)
+            .fit()
+            .into(imageView)
     }
 
     open fun loadImage(url: String, imageView: ImageView, placeHolder: Int){
