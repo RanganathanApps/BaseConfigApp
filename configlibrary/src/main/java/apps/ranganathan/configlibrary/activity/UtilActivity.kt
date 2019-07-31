@@ -37,6 +37,7 @@ open class UtilActivity : AppCompatActivity(), ToastManager, LogManager, Vibrate
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context,R.color.colorGrey));
         }
+        dialog.setCancelable(false)
         dialog.show()
     }
 
@@ -47,7 +48,7 @@ open class UtilActivity : AppCompatActivity(), ToastManager, LogManager, Vibrate
             .setMessage("You are currently using a latest one!")
             .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, which ->
             }).create()
-
+        dialog.setCancelable(false)
         dialog.show()
     }
 
