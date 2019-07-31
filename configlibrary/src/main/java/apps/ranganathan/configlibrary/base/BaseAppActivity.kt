@@ -29,6 +29,7 @@ import java.io.Serializable
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.squareup.picasso.NetworkPolicy
 import kotlinx.android.synthetic.main.alert_ly.view.*
 import kotlinx.android.synthetic.main.error_ly.view.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -101,6 +102,13 @@ open class BaseAppActivity : AppImagePickerActivity() {
                     makeLog(e!!.localizedMessage)
                 }
             })
+    }
+    open fun loadImagePicasso(url: String, imageView: ImageView, placeHolder: Int) {
+        Picasso.get().load(url)
+            .placeholder(placeHolder)
+            .networkPolicy(NetworkPolicy.OFFLINE)
+            .fit()
+            .into(imageView)
     }
 
     open fun loadImage(url: String, imageView: ImageView, placeHolder: Int){
@@ -245,25 +253,27 @@ open class BaseAppActivity : AppImagePickerActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    open fun showAlert(title: String, message: String, alertOkListner: Any?, cancelListner: Any?) {
+    open fun showAlert(title: String, message: String, alertOkListner: Any?) {
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.fragment_bottom_sheet_ex, null)
         view.errorLy.visibility = View.GONE
         view.alertLy.txtAlertMessage.text = message
         view.alertLy.txtAlertTitle.text = title
-        view.alertLy.btnYes.visibility = View.GONE
+        view.alertLy.btnYes.visibility = View.VISIBLE
+        view.alertLy.btnNo.visibility = View.GONE
         view.alertLy.btnYes.text = "Ok"
 
         view.alertLy.btnYes.setOnClickListener {
-            alertOkListner as Utils.OnClickListener
-            alertOkListner.onClick(it)
+            if (alertOkListner!=null) {
+                when(alertOkListner){
+                    is Utils.OnClickListener ->{
+                        alertOkListner.onClick(it)
+                    }
+                }
+            }
             dialog.dismiss()
         }
-        view.alertLy.btnNo.setOnClickListener {
-            cancelListner as Utils.OnClickListener
-            cancelListner.onClick(it)
-            dialog.dismiss()
-        }
+
 
         dialog.setContentView(view)
         dialog.show()

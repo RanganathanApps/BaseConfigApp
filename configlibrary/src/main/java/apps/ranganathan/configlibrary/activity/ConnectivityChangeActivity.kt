@@ -9,37 +9,35 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProviders
 import apps.ranganathan.configlibrary.base.NetworkUtil
 import apps.ranganathan.configlibrary.utils.InternetBroadCast
 import apps.ranganathan.configlibrary.utils.InternetConnectionListener
+import apps.ranganathan.configlibrary.viewModel.ConnectivityViewModel
 
 open class ConnectivityChangeActivity : UtilActivity() {
 
-    open var isDisconnected = false;
+    lateinit var connectivityViewModel: ConnectivityViewModel
     val CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-
+    open fun getIsConnected():LiveData<Boolean>{
+        return  connectivityViewModel.isConnected
     }
 
     open fun setConnectivityChange(){
         val intentFilter = IntentFilter()
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(InternetBroadCast(), intentFilter)
-
+        connectivityViewModel = ViewModelProviders.of(this).get(ConnectivityViewModel::class.java)
         InternetBroadCast.setInternetConnectionListener(this, object : InternetConnectionListener {
 
             override fun onInternetConnected() {
-                if (isDisconnected) {
-                    isDisconnected = false
-                    showToast("Connected..")
-                }
+                connectivityViewModel.isConnected.value = true
             }
 
             override fun onInternetDisConnected() {
-                isDisconnected = true
-                showToast("Internet  disConnected!")
+                connectivityViewModel.isConnected.value = false
 
             }
         })
