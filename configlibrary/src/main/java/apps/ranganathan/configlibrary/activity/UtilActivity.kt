@@ -37,6 +37,7 @@ open class UtilActivity : AppCompatActivity(), ToastManager, LogManager, Vibrate
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context,R.color.colorGrey));
         }
+
         dialog.setCancelable(false)
         dialog.show()
     }
