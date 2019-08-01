@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
+            android:singleLine="true"
             android:textSize="@dimen/_12sdp"/>
 
 </androidx.appcompat.widget.Toolbar>
