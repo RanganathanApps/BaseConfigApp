@@ -19,7 +19,7 @@ open class InternetBroadCast : BroadcastReceiver() {
 
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("app", "Network connectivity change")
+        Log.w("app", "Network connectivity change")
 
         if (intent.action!!.equals(CONNECTIVITY_ACTION)) {
             if (NetworkUtil.isNetworkAvailable(context)) {
