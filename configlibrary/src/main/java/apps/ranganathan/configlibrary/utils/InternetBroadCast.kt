@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.ConnectivityManager.CONNECTIVITY_ACTION
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import apps.ranganathan.configlibrary.base.NetworkUtil
 
 open class InternetBroadCast : BroadcastReceiver() {
 
@@ -22,7 +21,7 @@ open class InternetBroadCast : BroadcastReceiver() {
         Log.w("app", "Network connectivity change")
 
         if (intent.action!!.equals(CONNECTIVITY_ACTION)) {
-            if (NetworkUtil.isNetworkAvailable(context)) {
+            if (NetworkManager.isNetworkAvailable(context)) {
                 if (internetConnectionListener != null)
                     internetConnectionListener!!.onInternetConnected()
             } else {

@@ -1,9 +1,9 @@
-package apps.ranganathan.configlibrary.activity
+package apps.ranganathan.configlibrary.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
 
-open class AppNetworkUtils {
+object NetworkManager {
     val TYPE_WIFI = 1
     val TYPE_MOBILE = 2
     val TYPE_NOT_CONNECTED = 0
@@ -11,16 +11,12 @@ open class AppNetworkUtils {
     val NETWORK_STATUS_WIFI = 1
     val NETWORK_STATUS_MOBILE = 2
 
-    companion object  Factory{
-        open  fun isNetworkAvailable(context: Context): Boolean {
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    open  fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-            val activeNetwork = connectivityManager.activeNetworkInfo
-            return activeNetwork != null && activeNetwork.isConnected
-        }
-
+        val activeNetwork = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
     }
-
 
     open fun getConnectivityStatus(context: Context): Int {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
