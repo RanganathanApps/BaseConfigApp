@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 
 object NetworkManager {
+
     val TYPE_WIFI = 1
     val TYPE_MOBILE = 2
     val TYPE_NOT_CONNECTED = 0
@@ -11,11 +12,13 @@ object NetworkManager {
     val NETWORK_STATUS_WIFI = 1
     val NETWORK_STATUS_MOBILE = 2
 
+
+
     open  fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
         val activeNetwork = connectivityManager.activeNetworkInfo
         return activeNetwork != null && activeNetwork.isConnected
+
     }
 
     open fun getConnectivityStatus(context: Context): Int {

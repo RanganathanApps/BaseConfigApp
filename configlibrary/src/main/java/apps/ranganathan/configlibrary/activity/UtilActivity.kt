@@ -17,47 +17,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import apps.ranganathan.configlibrary.R
 import apps.ranganathan.configlibrary.base.BaseAppActivity
-import apps.ranganathan.configlibrary.utils.ForceUpdateChecker
-import apps.ranganathan.configlibrary.utils.LogManager
-import apps.ranganathan.configlibrary.utils.ToastManager
-import apps.ranganathan.configlibrary.utils.VibrateManager
+import apps.ranganathan.configlibrary.utils.*
 import com.google.android.material.snackbar.Snackbar
 
-open class UtilActivity : AppCompatActivity(), ToastManager, LogManager, VibrateManager,ForceUpdateChecker.OnUpdateNeededListener {
+open class UtilActivity : AppCompatActivity() , Utils {
 
-    override fun onUpdateNeeded(updateUrl: String) {
-        makeLog("onUpdateNeeded :$updateUrl")
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("New version available")
-            .setMessage("Please, update app to the newer version to continue..")
-            .setPositiveButton("Update", DialogInterface.OnClickListener { dialog, which ->
-                redirectStore(updateUrl)
-            }).setNegativeButton("cancel", null).create()
 
-        dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context,R.color.colorGrey));
-        }
-        dialog.setCancelable(false)
-
-        dialog.show()
-    }
-
-    override fun onUpToDate() {
-        makeLog("onUpToDate :")
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("App is up to date!")
-            .setMessage("You are currently using a latest one!")
-            .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, which ->
-            }).create()
-        dialog.setCancelable(false)
-        dialog.show()
-    }
-
-    private fun redirectStore(updateUrl: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-    }
 
     override val context: Context
         get() = this

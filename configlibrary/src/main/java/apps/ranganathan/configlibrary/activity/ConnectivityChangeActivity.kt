@@ -14,6 +14,7 @@ open class ConnectivityChangeActivity : UtilActivity() {
     val CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
 
     open fun getIsConnected(): LiveData<Boolean> {
+        showToast("hai")
         return connectivityViewModel.isConnected
     }
 

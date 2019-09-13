@@ -7,16 +7,5 @@ import android.os.Vibrator
 import android.widget.Toast
 
 interface VibrateManager {
-
-    val context: Context
-
-
-    fun vibrate(context: Context) {
-        val vibratorService = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibratorService.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
-        } else {
-            vibratorService.vibrate(50)
-        }
-    }
+    abstract fun vibrate(context: Context)
 }

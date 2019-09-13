@@ -37,12 +37,12 @@ open class PrefsManger(private val sharedPreferences: SharedPreferences) {
     }
 
     /*insert string*/
-    fun putString(key: String, value: String) {
-        sharedPreferences.edit().putString(key, value).apply()
+    fun getString(key: String, value: String) {
+        sharedPreferences.getString(key, value)
     }
 
     /*insert string*/
-    fun putint(key: String, value: Int) {
-        sharedPreferences.edit().putInt(key, value).apply()
+    fun getInt(key: String, value: Int) {
+        sharedPreferences.getInt(key, value)
     }
 }
