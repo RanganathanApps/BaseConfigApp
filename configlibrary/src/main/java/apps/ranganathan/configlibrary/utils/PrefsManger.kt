@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 /*simple class for SharePreferences
 * base Prefs's functions
 */
-class PrefsManger(private val sharedPreferences: SharedPreferences) {
+open class PrefsManger(private val sharedPreferences: SharedPreferences) {
 
 
     /*insert*/

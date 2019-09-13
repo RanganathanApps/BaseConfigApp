@@ -50,7 +50,7 @@ open class BaseAppActivity : AppImagePickerActivity() {
             setSupportActionBar(toolbar)
             toolbar.setNavigationOnClickListener { onBackPressed() }
         } catch (e: Exception) {
-            showToast(e.localizedMessage)
+            showToast(e.localizedMessage?:"Some error occurred!")
         }
     }
 
@@ -58,7 +58,7 @@ open class BaseAppActivity : AppImagePickerActivity() {
         try {
             toolbar.txtToolbarTitle.text = title
         } catch (e: Exception) {
-            showToast(e.localizedMessage)
+            showToast(e.localizedMessage?:"Some error occurred!")
         }
     }
 
