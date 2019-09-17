@@ -37,13 +37,6 @@ open class ConnectivityChangeActivity : UtilActivity() {
 
     }
 
-
-    override fun onResume() {
-        super.onResume()
-
-
-    }
-
     override fun onStart() {
         super.onStart()
         /* val intentFilter = IntentFilter()
